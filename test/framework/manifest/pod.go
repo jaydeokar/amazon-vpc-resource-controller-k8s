@@ -53,11 +53,11 @@ func (p *PodBuilder) Build() (*v1.Pod, error) {
 	}, nil
 }
 
-func NewDefaultPodBuilder() *PodBuilder {
+func NewDefaultPodBuilder(registry string) *PodBuilder {
 	return &PodBuilder{
 		namespace:   "default",
 		name:        utils.ResourceNamePrefix + "pod",
-		container:   NewBusyBoxContainerBuilder().Build(),
+		container:   NewBusyBoxContainerBuilder(registry).Build(),
 		os:          "linux",
 		labels:      map[string]string{},
 		annotations: map[string]string{},
@@ -67,11 +67,11 @@ func NewDefaultPodBuilder() *PodBuilder {
 	}
 }
 
-func NewWindowsPodBuilder() *PodBuilder {
+func NewWindowsPodBuilder(registry string) *PodBuilder {
 	return &PodBuilder{
 		namespace:              "windows-test",
 		name:                   "windows-pod",
-		container:              NewWindowsContainerBuilder().Build(),
+		container:              NewWindowsContainerBuilder(registry).Build(),
 		os:                     "windows",
 		terminationGracePeriod: 0,
 		restartPolicy:          v1.RestartPolicyNever,

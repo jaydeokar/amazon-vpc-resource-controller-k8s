@@ -20,6 +20,8 @@ KUBE CONFIG: $KUBE_CONFIG_PATH
 CLUSTER_NAME: $CLUSTER_NAME
 REGION: $REGION"
 
+TEST_IMAGE_REGISTRY=${TEST_IMAGE_REGISTRY:-"617930562442.dkr.ecr.us-west-2.amazonaws.com"}
+
 # Default Proxy is not allowed in China Region
 if [[ $REGION == "cn-north-1" || $REGION == "cn-northwest-1" ]]; then
   go env -w GOPROXY=https://goproxy.cn,direct
@@ -117,13 +119,13 @@ function run_canary_tests() {
   # For each component, we want to cover the most important test cases. We also don't want to take more than 30 minutes
   # per repository as these tests are run sequentially along with tests from other repositories
   # Currently the overall execution time is ~50 minutes and we will reduce it in future
-  (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 10m $GINKGO_TEST_BUILD_DIR/perpodsg.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID)
+  (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 10m $GINKGO_TEST_BUILD_DIR/perpodsg.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID --test-registry=$TEST_IMAGE_REGISTRY)
   if [[ -z "${SKIP_WINDOWS_TEST}" ]]; then
-    (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 35m $GINKGO_TEST_BUILD_DIR/windows.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID)
+    (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 35m $GINKGO_TEST_BUILD_DIR/windows.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID --test-registry=$TEST_IMAGE_REGISTRY)
   else
     echo "skipping Windows tests"
   fi
-  (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 5m $GINKGO_TEST_BUILD_DIR/webhook.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID)
+  (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 5m $GINKGO_TEST_BUILD_DIR/webhook.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID --test-registry=$TEST_IMAGE_REGISTRY)
   # (CGO_ENABLED=0 ginkgo --no-color --focus="CANARY" $EXTRA_GINKGO_FLAGS -v --timeout 10m $GINKGO_TEST_BUILD_DIR/cninode.test -- --cluster-kubeconfig=$KUBE_CONFIG_PATH --cluster-name=$CLUSTER_NAME --aws-region=$REGION --aws-vpc-id=$VPC_ID)
 }
 

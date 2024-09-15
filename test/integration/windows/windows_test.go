@@ -76,7 +76,7 @@ var _ = Describe("Windows Integration Test", func() {
 	JustBeforeEach(func() {
 		frameWork.NSManager.CreateNamespace(ctx, namespace)
 
-		testerContainer = manifest.NewWindowsContainerBuilder().
+		testerContainer = manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 			Args(testerContainerCommands).
 			Build()
 
@@ -98,7 +98,7 @@ var _ = Describe("Windows Integration Test", func() {
 		var testPod *v1.Pod
 		var createdPod *v1.Pod
 		BeforeEach(func() {
-			testPod, err = manifest.NewWindowsPodBuilder().Build()
+			testPod, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).Build()
 			Expect(err).ToNot(HaveOccurred())
 		})
 
@@ -154,7 +154,7 @@ var _ = Describe("Windows Integration Test", func() {
 			Context("when enable-windows-ipam is set to true but old controller deployment exists", func() {
 				It("pod should fail to create", func() {
 					By("creating a dummy deployment for vpc-resource-controller")
-					oldControllerDeployment := manifest.NewDefaultDeploymentBuilder().
+					oldControllerDeployment := manifest.NewDefaultDeploymentBuilder(frameWork.Options.TestRegistry).
 						Namespace(config.KubeSystemNamespace).
 						Name(config.OldVPCControllerDeploymentName).
 						PodLabel("app", "vpc-resource-controller").
@@ -179,7 +179,7 @@ var _ = Describe("Windows Integration Test", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					By("creating windows pod and waiting for it to run")
-					testPod, err = manifest.NewWindowsPodBuilder().Build()
+					testPod, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).Build()
 					Expect(err).ToNot(HaveOccurred())
 
 					createdPod, err = frameWork.PodManager.
@@ -217,7 +217,7 @@ var _ = Describe("Windows Integration Test", func() {
 		var nodeName string
 		var bufferForCoolDown = config.CoolDownPeriod + (time.Second * 5)
 		var poolReconciliationWaitTime = time.Second * 5
-		container := manifest.NewWindowsContainerBuilder().Args(sleepInfinityContainerCommands).Build()
+		container := manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).Args(sleepInfinityContainerCommands).Build()
 
 		data = map[string]string{
 			config.EnableWindowsIPAMKey:             "true",
@@ -464,12 +464,12 @@ var _ = Describe("Windows Integration Test", func() {
 				GetCommandToTestHostConnectivity("www.amazon.com", 80, 2, false),
 			}
 
-			testerContainer = manifest.NewWindowsContainerBuilder().
+			testerContainer = manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 				Args(testerContainerCommands).
 				Build()
-			testContainerLongLiving := manifest.NewWindowsContainerBuilder().Args(sleepInfinityContainerCommands).Build()
+			testContainerLongLiving := manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).Args(sleepInfinityContainerCommands).Build()
 
-			testPod, err = manifest.NewWindowsPodBuilder().
+			testPod, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).
 				Namespace("windows-test").
 				Name("windows-pd-pod").
 				Container(testerContainer).
@@ -480,7 +480,7 @@ var _ = Describe("Windows Integration Test", func() {
 				Build()
 			Expect(err).ToNot(HaveOccurred())
 
-			testPod2, err = manifest.NewWindowsPodBuilder().
+			testPod2, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).
 				Namespace("windows-test").
 				Name("windows-pd-pod2").
 				Container(testerContainer).
@@ -491,7 +491,7 @@ var _ = Describe("Windows Integration Test", func() {
 				Build()
 			Expect(err).ToNot(HaveOccurred())
 
-			testPodLongLiving, err = manifest.NewWindowsPodBuilder().
+			testPodLongLiving, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).
 				Namespace("windows-test").
 				Name("windows-pod-long-living").
 				Container(testContainerLongLiving).
@@ -640,7 +640,7 @@ var _ = Describe("Windows Integration Test", func() {
 					By("creating 33 pods and waiting for ready should have 3 prefixes attached")
 					deployment := manifest.NewWindowsDeploymentBuilder().
 						Replicas(33).
-						Container(manifest.NewWindowsContainerBuilder().Build()).
+						Container(manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).Build()).
 						PodLabel(podLabelKey, podLabelVal).
 						NodeSelector(map[string]string{"kubernetes.io/os": "windows", podLabelKey: podLabelVal}).
 						Build()
@@ -773,7 +773,7 @@ var _ = Describe("Windows Integration Test", func() {
 					By("creating 33 pods and waiting for ready should have 3 prefixes attached")
 					deployment := manifest.NewWindowsDeploymentBuilder().
 						Replicas(33).
-						Container(manifest.NewWindowsContainerBuilder().Build()).
+						Container(manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).Build()).
 						PodLabel(podLabelKey, podLabelVal).
 						NodeSelector(map[string]string{"kubernetes.io/os": "windows", podLabelKey: podLabelVal}).
 						Build()
@@ -874,7 +874,7 @@ var _ = Describe("Windows Integration Test", func() {
 
 				It("pod should fail to create", func() {
 					By("creating a dummy deployment for vpc-resource-controller")
-					oldControllerDeployment := manifest.NewDefaultDeploymentBuilder().
+					oldControllerDeployment := manifest.NewDefaultDeploymentBuilder(frameWork.Options.TestRegistry).
 						Namespace(config.KubeSystemNamespace).
 						Name(config.OldVPCControllerDeploymentName).
 						PodLabel("app", "vpc-resource-controller").
@@ -899,7 +899,7 @@ var _ = Describe("Windows Integration Test", func() {
 					Expect(err).ToNot(HaveOccurred())
 
 					By("creating windows pod and waiting for it to run")
-					testPod, err = manifest.NewWindowsPodBuilder().Build()
+					testPod, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).Build()
 					Expect(err).ToNot(HaveOccurred())
 
 					createdPod, err = frameWork.PodManager.
@@ -1001,7 +1001,7 @@ var _ = Describe("Windows Integration Test", func() {
 
 		JustBeforeEach(func() {
 
-			deploymentContainer = manifest.NewWindowsContainerBuilder().
+			deploymentContainer = manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 				Args([]string{GetCommandToStartHttpServer()}).
 				Build()
 
@@ -1029,7 +1029,7 @@ var _ = Describe("Windows Integration Test", func() {
 			// Allow some time for service to become ready
 			time.Sleep(bufferForSvcToBecomeReady)
 
-			testerContainer = manifest.NewWindowsContainerBuilder().
+			testerContainer = manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 				Args([]string{
 					GetCommandToTestHostConnectivity(service.Spec.ClusterIP, service.Spec.Ports[0].Port, 10, false)}).
 				Build()
@@ -1095,7 +1095,7 @@ var _ = Describe("Windows Integration Test", func() {
 		It("should successfully run the pod each time", func() {
 			for i := 0; i < 5; i++ {
 				By(fmt.Sprintf("run # %d: creating pod with same ns/name", i))
-				pod, err := manifest.NewWindowsPodBuilder().Container(testerContainer).Build()
+				pod, err := manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).Container(testerContainer).Build()
 				Expect(err).ToNot(HaveOccurred())
 
 				_, err = frameWork.PodManager.CreateAndWaitTillPodIsCompleted(ctx, pod)
@@ -1119,7 +1119,7 @@ var _ = Describe("Windows Integration Test", func() {
 
 					deployment = manifest.NewWindowsDeploymentBuilder().
 						Replicas(30).
-						Container(manifest.NewWindowsContainerBuilder().Build()).
+						Container(manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).Build()).
 						PodLabel(podLabelKey, podLabelVal).
 						Build()
 
@@ -1137,7 +1137,7 @@ var _ = Describe("Windows Integration Test", func() {
 })
 
 func generateTestPodSpec(index int, testerContainer v1.Container, nodeName string) *v1.Pod {
-	testPod, err := manifest.NewWindowsPodBuilder().
+	testPod, err := manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).
 		Namespace("windows-test").
 		Name(fmt.Sprintf("windows-secondary-ip-pod-%d", index)).
 		Container(testerContainer).

@@ -27,20 +27,20 @@ type Container struct {
 	requirements    v1.ResourceRequirements
 }
 
-func NewBusyBoxContainerBuilder() *Container {
+func NewBusyBoxContainerBuilder(registry string) *Container {
 	return &Container{
 		name:            "busybox",
-		image:           "busybox",
+		image:           registry + "busybox",
 		imagePullPolicy: v1.PullIfNotPresent,
 		command:         []string{"sleep", "3600"},
 		args:            []string{},
 	}
 }
 
-func NewWindowsContainerBuilder() *Container {
+func NewWindowsContainerBuilder(registry string) *Container {
 	return &Container{
 		name:            "windows-container",
-		image:           "mcr.microsoft.com/windows/servercore:ltsc2019",
+		image:           registry + "mcr.microsoft.com/windows/servercore:ltsc2019",
 		imagePullPolicy: v1.PullIfNotPresent,
 		command:         []string{"powershell.exe"},
 		args:            []string{"Start-Sleep -s 3600"},

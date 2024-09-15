@@ -86,7 +86,7 @@ var _ = Describe("Branch ENI Pods", func() {
 		var deployment *appsv1.Deployment
 
 		JustBeforeEach(func() {
-			deployment = manifest.NewDefaultDeploymentBuilder().
+			deployment = manifest.NewDefaultDeploymentBuilder(frameWork.Options.TestRegistry).
 				Namespace(namespace).
 				Replicas(10).
 				PodLabel(podLabelKey, podLabelValue).Build()
@@ -113,7 +113,7 @@ var _ = Describe("Branch ENI Pods", func() {
 		var pod *v1.Pod
 
 		JustBeforeEach(func() {
-			pod, err = manifest.NewDefaultPodBuilder().
+			pod, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 				Namespace(namespace).
 				Labels(map[string]string{podLabelKey: podLabelValue}).Build()
 			Expect(err).NotTo(HaveOccurred())
@@ -265,7 +265,7 @@ var _ = Describe("Branch ENI Pods", func() {
 
 				Context("when the pod matches both label and expression selectors", func() {
 					JustBeforeEach(func() {
-						pod, err = manifest.NewDefaultPodBuilder().
+						pod, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 							Namespace(namespace).
 							Labels(map[string]string{podLabelKey: podLabelValue, sgpExpressionKey: sgpExpressionValue[0]}).
 							Build()
@@ -315,7 +315,7 @@ var _ = Describe("Branch ENI Pods", func() {
 					Namespace(namespace).
 					Label(podLabelKey, podLabelValue).Build()
 
-				pod, err = manifest.NewDefaultPodBuilder().
+				pod, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 					Namespace(namespace).
 					ServiceAccount(sa.Name).Build()
 				Expect(err).NotTo(HaveOccurred())
@@ -409,14 +409,14 @@ var _ = Describe("Branch ENI Pods", func() {
 
 			targetedNodes = nodeList.Items[:1]
 
-			container = manifest.NewBusyBoxContainerBuilder().
+			container = manifest.NewBusyBoxContainerBuilder(frameWork.Options.TestRegistry).
 				Resources(v1.ResourceRequirements{
 					Limits:   resourceMap,
 					Requests: resourceMap,
 				}).
 				Build()
 
-			podTemplate, err = manifest.NewDefaultPodBuilder().
+			podTemplate, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 				Labels(map[string]string{podLabelKey: podLabelValue}).
 				Container(container).
 				NodeName(targetedNodes[0].Name).

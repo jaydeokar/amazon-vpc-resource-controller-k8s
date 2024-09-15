@@ -59,7 +59,7 @@ var _ = Describe("Security group per pod scale test", func() {
 		var deployment *v1.Deployment
 
 		JustBeforeEach(func() {
-			deployment = manifest.NewDefaultDeploymentBuilder().
+			deployment = manifest.NewDefaultDeploymentBuilder(frameWork.Options.TestRegistry).
 				Namespace(namespace).
 				Replicas(1000).
 				PodLabel(sgpLabelKey, sgpLabelValue).Build()

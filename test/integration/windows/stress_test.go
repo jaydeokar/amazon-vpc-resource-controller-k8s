@@ -116,12 +116,12 @@ var _ = Describe("Windows Integration Stress Tests", func() {
 		err = frameWork.NSManager.CreateNamespace(ctx, namespace)
 		Expect(err).ToNot(HaveOccurred())
 
-		serverContainer := manifest.NewWindowsContainerBuilder().
+		serverContainer := manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 			Args([]string{GetCommandToStartHttpServer()}).
 			Build()
 
 		By("creating and waiting till Windows server Pod runs")
-		serverPod, err = manifest.NewWindowsPodBuilder().
+		serverPod, err = manifest.NewWindowsPodBuilder(frameWork.Options.TestRegistry).
 			TerminationGracePeriod(0).
 			Namespace(namespace).
 			Container(serverContainer).
@@ -133,7 +133,7 @@ var _ = Describe("Windows Integration Stress Tests", func() {
 			CreateAndWaitTillPodIsRunning(ctx, serverPod, testUtils.WindowsPodsCreationTimeout)
 		Expect(err).ToNot(HaveOccurred())
 
-		clientContainer := manifest.NewWindowsContainerBuilder().
+		clientContainer := manifest.NewWindowsContainerBuilder(frameWork.Options.TestRegistry).
 			Args([]string{GetCommandToContinuouslyTestHostConnectivity(
 				serverPod.Status.PodIP, clientToServerTries, clientToServerRetryInterval)}).
 			Resources(coreV1.ResourceRequirements{

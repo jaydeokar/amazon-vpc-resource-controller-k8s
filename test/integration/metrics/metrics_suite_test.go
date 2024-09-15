@@ -75,8 +75,8 @@ func getCurrentControllerImage() (string, error) {
 }
 
 func createCurlPod() (*v1.Pod, error) {
-	container := manifest.NewBusyBoxContainerBuilder().Image("curlimages/curl").Name("curl").Build()
-	pod, err := manifest.NewDefaultPodBuilder().Name("curl").Namespace(controller.Namespace).Container(container).Build()
+	container := manifest.NewBusyBoxContainerBuilder(frameWork.Options.TestRegistry).Image("curlimages/curl").Name("curl").Build()
+	pod, err := manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).Name("curl").Namespace(controller.Namespace).Container(container).Build()
 	if err != nil {
 		return nil, err
 	}

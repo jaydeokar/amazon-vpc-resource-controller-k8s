@@ -35,6 +35,7 @@ type Options struct {
 	AWSVPCID             string
 	ReleasedImageVersion string
 	ClusterRoleArn       string
+	TestRegistry         string
 }
 
 func (options *Options) BindFlags() {
@@ -44,6 +45,7 @@ func (options *Options) BindFlags() {
 	flag.StringVar(&options.AWSVPCID, "aws-vpc-id", "", `AWS VPC ID for the kubernetes cluster`)
 	flag.StringVar(&options.ReleasedImageVersion, "latest-released-rc-image-tag", "v1.1.3", `VPC RC latest released image`)
 	flag.StringVar(&options.ClusterRoleArn, "cluster-role-arn", "", "EKS Cluster role ARN")
+	flag.StringVar(&options.TestRegistry, "test-registry", "", "")
 }
 
 func (options *Options) Validate() error {

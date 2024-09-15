@@ -85,7 +85,7 @@ var _ = BeforeSuite(func() {
 	sgpWrapper.CreateSecurityGroupPolicy(frameWork.K8sClient, ctx, sgp)
 
 	By("creating a pod with branch ENI")
-	pod, err = manifest.NewDefaultPodBuilder().
+	pod, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 		Labels(map[string]string{podMatchLabelKey: podMatchLabelVal}).
 		Namespace(namespace).
 		Build()

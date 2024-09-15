@@ -62,7 +62,7 @@ var _ = Describe("validating webhook test cases", func() {
 
 	Context("[CANARY] when creating new pod", func() {
 		It("should fail on creating pod with sgp annotation", func() {
-			newPod, err := manifest.NewDefaultPodBuilder().
+			newPod, err := manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 				Annotations(map[string]string{config.ResourceNamePodENI: "new-annotation"}).
 				Namespace(namespace).
 				Name("new-pod").
@@ -74,7 +74,7 @@ var _ = Describe("validating webhook test cases", func() {
 		})
 
 		It("should not fail on creating new pod without sgp annotation", func() {
-			newPod, err := manifest.NewDefaultPodBuilder().
+			newPod, err := manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 				Annotations(map[string]string{"some-other-annotation": "new-annotation"}).
 				Namespace(namespace).
 				Name("new-pod").

@@ -108,7 +108,7 @@ var _ = Describe("Security Group Per Pod", func() {
 
 			sgpWrapper.CreateSecurityGroupPolicy(frameWork.K8sClient, ctx, sgp)
 
-			serverContainer := manifest.NewBusyBoxContainerBuilder().
+			serverContainer := manifest.NewBusyBoxContainerBuilder(frameWork.Options.TestRegistry).
 				Name("sgp-server").
 				Image("nginx").
 				AddContainerPort(v1.ContainerPort{
@@ -119,7 +119,7 @@ var _ = Describe("Security Group Per Pod", func() {
 
 			// Need the TerminationGracePeriod because of the following issue in IPAMD
 			// https://github.com/aws/amazon-vpc-cni-k8s/issues/1313#issuecomment-901818609
-			serverPod, err = manifest.NewDefaultPodBuilder().
+			serverPod, err = manifest.NewDefaultPodBuilder(frameWork.Options.TestRegistry).
 				Namespace(namespace).
 				Name("sgp-server").
 				Container(serverContainer).
@@ -142,7 +142,7 @@ var _ = Describe("Security Group Per Pod", func() {
 				for j := 0; j < numJobs; j++ {
 					// The Job Pod tests HTTP connection to server Pod which
 					// acts as a High Level check for SGP Pod Networking
-					jobContainer := manifest.NewBusyBoxContainerBuilder().
+					jobContainer := manifest.NewBusyBoxContainerBuilder(frameWork.Options.TestRegistry).
 						Image("curlimages/curl").
 						Command([]string{"/bin/sh"}).
 						Args([]string{"-c",

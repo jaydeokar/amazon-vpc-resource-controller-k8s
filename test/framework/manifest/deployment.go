@@ -33,14 +33,14 @@ type DeploymentBuilder struct {
 	nodeSelector           map[string]string
 }
 
-func NewDefaultDeploymentBuilder() *DeploymentBuilder {
+func NewDefaultDeploymentBuilder(registry string) *DeploymentBuilder {
 	return &DeploymentBuilder{
 		namespace:              "default",
 		name:                   utils.ResourceNamePrefix + "deployment",
 		replicas:               10,
 		nodeSelector:           map[string]string{"kubernetes.io/os": "linux"},
 		os:                     "linux",
-		container:              NewBusyBoxContainerBuilder().Build(),
+		container:              NewBusyBoxContainerBuilder(registry).Build(),
 		labels:                 map[string]string{},
 		terminationGracePeriod: 0,
 	}

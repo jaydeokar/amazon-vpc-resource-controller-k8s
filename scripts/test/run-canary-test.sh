@@ -24,6 +24,15 @@ REGION: $REGION"
 if [[ $REGION == "cn-north-1" || $REGION == "cn-northwest-1" ]]; then
   go env -w GOPROXY=https://goproxy.cn,direct
   go env -w GOSUMDB=sum.golang.google.cn
+  PARTITION="aws-cn"  
+fi
+
+if [[ $REGION == "us-isof-east-1" || $REGION == "us-isof-south-1" ]]; then
+  PARTITION="aws-iso-f"
+elif [[$REGION == "eu-isoe-west-1" ]]; then
+  PARTITION="aws-iso-e"
+else
+  PARTITION="aws"
 fi
 
 function load_addon_details() {

@@ -37,14 +37,14 @@ function load_deveks_cluster_details() {
 function attach_controller_policy_cluster_role() {
   echo "Attaching IAM Policy to Cluster Service Role"
   AWS_MAX_ATTEMPTS=10 aws iam attach-role-policy \
-    --policy-arn arn:aws:iam::aws:policy/AmazonEKSVPCResourceController \
+    --policy-arn arn:$PARTITION:iam::aws:policy/AmazonEKSVPCResourceController \
     --role-name "$ROLE_NAME" > /dev/null
 }
 
 function detach_controller_policy_cluster_role() {
   echo "Detaching the IAM Policy from Cluster Service Role"
   aws iam detach-role-policy \
-    --policy-arn arn:aws:iam::aws:policy/AmazonEKSVPCResourceController \
+    --policy-arn arn:$PARTITION:iam::aws:policy/AmazonEKSVPCResourceController \
     --role-name $ROLE_NAME > /dev/null
 }
 
